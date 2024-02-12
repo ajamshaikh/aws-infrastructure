@@ -1,17 +1,4 @@
-
-# Create NAT Gateway
-/*resource "aws_nat_gateway" "main" {
-  # allocation_id = aws_instance.public_instance.network_interface # Assuming the public instance has a single network interface 
-  subnet_id = aws_subnet.private.id
-  connectivity_type = "public"
-  #allocation_id = "eipalloc-00ecc2f3c529243b6"
-
-  tags = {
-    Name = "MyNAT1"
-  }
-}*/
-
-# Allocate Elastic IP Address (EIP 1)
+# Allocate Elastic IP Address 
 # terraform aws allocate elastic ip
 resource "aws_eip" "eip-for-nat-gateway-1" {
   vpc    = true
@@ -21,7 +8,7 @@ resource "aws_eip" "eip-for-nat-gateway-1" {
   }
 }
 
-# Create Nat Gateway 1 in Public Subnet 1
+
 # terraform create aws nat gateway
 resource "aws_nat_gateway" "nat-gateway-1" {
   allocation_id = aws_eip.eip-for-nat-gateway-1.id
@@ -32,7 +19,6 @@ resource "aws_nat_gateway" "nat-gateway-1" {
   }
 }
 
-# Create Private Route Table 1 and Add Route Through Nat Gateway 1
 # terraform aws create route table
 resource "aws_route_table" "private-route-table-1" {
         vpc_id = aws_vpc.my-vpc1.id
@@ -47,7 +33,6 @@ resource "aws_route_table" "private-route-table-1" {
   }
 }
 
-# Associate Private Subnet 1 with "Private Route Table 1"
 # terraform aws associate subnet with route table
 resource "aws_route_table_association" "private-subnet-1-route-table-association" {
   subnet_id         = aws_subnet.private.id
